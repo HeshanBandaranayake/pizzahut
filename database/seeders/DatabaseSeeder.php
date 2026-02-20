@@ -54,6 +54,7 @@ class DatabaseSeeder extends Seeder
 
         // Seed Products
         $products = [
+            // Classic Pizzas
             [
                 'name' => 'Pepperoni Feast', 
                 'price' => 18.99, 
@@ -70,20 +71,63 @@ class DatabaseSeeder extends Seeder
                 'category' => 'Pizza', 
                 'is_available' => true
             ],
+            // Signature Pizzas
             [
-                'name' => 'Meat Lover', 
-                'price' => 21.00, 
-                'description' => 'Pepperoni, Italian sausage, ham, bacon, and seasoned pork.', 
-                'ingredients' => 'Tomato Sauce, Mozzarella, Pepperoni, Italian Sausage, Sliced Ham, Crispy Bacon, Seasoned Pork',
-                'category' => 'Pizza', 
+                'name' => 'BBQ Chicken Blast', 
+                'price' => 22.00, 
+                'description' => 'Grilled chicken, red onions, and cilantro with a smoky BBQ sauce base.', 
+                'ingredients' => 'BBQ Sauce, Mozzarella, Grilled Chicken, Red Onions, Cilantro',
+                'category' => 'Signature', 
                 'is_available' => true
             ],
             [
-                'name' => 'Hawaiian', 
-                'price' => 17.50, 
-                'description' => 'Sweet pineapple and savory ham with premium cheese.', 
-                'ingredients' => 'Tomato Sauce, Mozzarella, Sliced Ham, Sweet Pineapple Chunks',
-                'category' => 'Pizza', 
+                'name' => 'Super Supreme', 
+                'price' => 24.50, 
+                'description' => 'The ultimate pizza with 9 premium toppings.', 
+                'ingredients' => 'Tomato Sauce, Mozzarella, Pepperoni, Beef, Pork, Ham, Mushrooms, Green Peppers, Onions, Olives',
+                'category' => 'Signature', 
+                'is_available' => true
+            ],
+            // Delight Pizzas
+            [
+                'name' => 'Thin Crust Garden Delight', 
+                'price' => 17.00, 
+                'description' => 'Light and crispy thin crust topped with fresh garden veggies.', 
+                'ingredients' => 'Lite Tomato Sauce, Part-Skim Mozzarella, Spinach, Zucchini, Roasted Peppers',
+                'category' => 'Delight', 
+                'is_available' => true
+            ],
+            [
+                'name' => 'Chicken Bacon Delight', 
+                'price' => 19.50, 
+                'description' => 'Creamy garlic parmesan sauce with chicken and smoky bacon.', 
+                'ingredients' => 'Garlic Parm Sauce, Mozzarella, Grilled Chicken, Smoked Bacon, Spring Onions',
+                'category' => 'Delight', 
+                'is_available' => true
+            ],
+            // Beverages
+            [
+                'name' => 'Coca-Cola (500ml)', 
+                'price' => 2.50, 
+                'description' => 'Classic refreshing Coca-Cola.', 
+                'ingredients' => 'Carbonated Water, Sugar, Caramel Color, Phosphoric Acid, Natural Flavors, Caffeine',
+                'category' => 'Beverages', 
+                'is_available' => true
+            ],
+            [
+                'name' => 'Sprite (500ml)', 
+                'price' => 2.50, 
+                'description' => 'Crisp, refreshing lemon-lime soda.', 
+                'ingredients' => 'Carbonated Water, Sugar, Citric Acid, Natural Flavors, Sodium Citrate',
+                'category' => 'Beverages', 
+                'is_available' => true
+            ],
+            [
+                'name' => 'Iced Lemon Tea', 
+                'price' => 3.00, 
+                'description' => 'Refreshing chilled black tea with a hint of lemon.', 
+                'ingredients' => 'Water, Black Tea Extract, Sugar, Lemon Juice, Citric Acid',
+                'category' => 'Beverages', 
                 'is_available' => true
             ],
         ];
@@ -102,20 +146,28 @@ class DatabaseSeeder extends Seeder
             \App\Models\Customer::firstOrCreate(['email' => $c['email']], $c);
         }
         // Seed Sizes
-        \App\Models\PizzaSize::insert([
-            ['name' => 'Personal', 'price_modifier' => 0.00, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Medium', 'price_modifier' => 4.00, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Large', 'price_modifier' => 8.00, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        $sizes = [
+            ['name' => 'Personal', 'price_modifier' => 0.00],
+            ['name' => 'Medium', 'price_modifier' => 4.00],
+            ['name' => 'Large', 'price_modifier' => 8.00],
+        ];
+
+        foreach ($sizes as $s) {
+            \App\Models\PizzaSize::updateOrCreate(['name' => $s['name']], $s);
+        }
 
         // Seed Toppings
-        \App\Models\Topping::insert([
-            ['name' => 'Extra Cheese', 'price' => 2.00, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Mushrooms', 'price' => 1.50, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Onions', 'price' => 1.00, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Green Peppers', 'price' => 1.00, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Black Olives', 'price' => 1.50, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Pepperoni', 'price' => 2.50, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        $toppings = [
+            ['name' => 'Extra Cheese', 'price' => 2.00],
+            ['name' => 'Mushrooms', 'price' => 1.50],
+            ['name' => 'Onions', 'price' => 1.00],
+            ['name' => 'Green Peppers', 'price' => 1.00],
+            ['name' => 'Black Olives', 'price' => 1.50],
+            ['name' => 'Pepperoni', 'price' => 2.50],
+        ];
+
+        foreach ($toppings as $t) {
+            \App\Models\Topping::updateOrCreate(['name' => $t['name']], $t);
+        }
     }
 }

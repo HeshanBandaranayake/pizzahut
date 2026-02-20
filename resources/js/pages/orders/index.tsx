@@ -30,6 +30,8 @@ interface Order {
     table_number?: string;
     order_items: Array<{
         quantity: number;
+        size?: string;
+        toppings?: string[];
         product: {
             name: string;
         };
@@ -119,8 +121,15 @@ export default function Index({ orders = [] }: Props) {
                                     {filteredOrders.length > 0 ? (
                                         filteredOrders.map((order: Order) => {
                                             const itemSummary = order.order_items
-                                                ?.map((item: any) => `${item.quantity}x ${item.product?.name}`)
-                                                .join(', ') || 'Standard Prep';
+                                                ?.map((item: any) => {
+                                                    let desc = `${item.quantity}x ${item.product?.name}`;
+                                                    if (item.size) desc += ` (${item.size})`;
+                                                    if (item.toppings && item.toppings.length > 0) {
+                                                        desc += ` + ${item.toppings.join(', ')}`;
+                                                    }
+                                                    return desc;
+                                                })
+                                                .join(' | ') || 'Standard Prep';
 
                                             return (
                                                 <tr key={order.id} className="border-b transition-colors hover:bg-muted/50 group">

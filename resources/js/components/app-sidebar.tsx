@@ -84,11 +84,11 @@ export function AppSidebar() {
         if (userRole === 'admin') return true;
 
         if (userRole === 'manager') {
-            return item.title !== 'Staff Management';
+            return !['Staff Management'].includes(item.title);
         }
 
         if (userRole === 'chef') {
-            return ['Dashboard', 'Orders', 'Menu'].includes(item.title);
+            return ['Dashboard', 'Orders', 'Menu', 'Pizza Sizes', 'Toppings'].includes(item.title);
         }
 
         if (userRole === 'receptionist') {

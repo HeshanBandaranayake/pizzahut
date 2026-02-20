@@ -21,9 +21,13 @@ interface Product {
 export default function Welcome({
     canRegister = true,
     products = [],
+    pizzaSizes = [],
+    toppings = [],
 }: {
     canRegister?: boolean;
     products?: Product[];
+    pizzaSizes?: any[];
+    toppings?: any[];
 }) {
     const { auth } = usePage().props;
     const { addItem } = useCart();
@@ -60,11 +64,16 @@ export default function Welcome({
 
     return (
         <div className="min-h-screen bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC]">
-            <PizzaCustomizer
-                pizza={selectedPizza}
-                isOpen={isCustomizerOpen}
-                onClose={() => setIsCustomizerOpen(false)}
-            />
+            {/* Pizza Customizer Modal */}
+            {selectedPizza && (
+                <PizzaCustomizer
+                    isOpen={isCustomizerOpen}
+                    onClose={() => setIsCustomizerOpen(false)}
+                    pizza={selectedPizza}
+                    availableSizes={pizzaSizes}
+                    availableToppings={toppings}
+                />
+            )}
             <Head title="Welcome to PizzaHut">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />

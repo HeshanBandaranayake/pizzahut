@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -20,39 +20,42 @@ interface PizzaCustomizerProps {
         image: string;
         description: string;
     } | null;
+    availableSizes?: any[];
+    availableToppings?: any[];
     isOpen: boolean;
     onClose: () => void;
 }
 
-const SIZES = [
-    { label: 'Personal', value: 'personal', priceMod: 0 },
-    { label: 'Medium', value: 'medium', priceMod: 4 },
-    { label: 'Large', value: 'large', priceMod: 8 },
-];
-
-const TOPPINGS = [
-    { label: 'Extra Cheese', value: 'cheese', price: 2 },
-    { label: 'Mushrooms', value: 'mushrooms', price: 1.5 },
-    { label: 'Onions', value: 'onions', price: 1 },
-    { label: 'Green Peppers', value: 'peppers', price: 1 },
-    { label: 'Black Olives', value: 'olives', price: 1.5 },
-    { label: 'Pepperoni', value: 'pepperoni', price: 2.5 },
-];
-
-export function PizzaCustomizer({ pizza, isOpen, onClose }: PizzaCustomizerProps) {
+export function PizzaCustomizer({
+    pizza,
+    isOpen,
+    onClose,
+    availableSizes = [],
+    availableToppings = []
+}: PizzaCustomizerProps) {
     const { addItem } = useCart();
-    const [selectedSize, setSelectedSize] = useState(SIZES[1]); // Default Medium
-    const [selectedToppings, setSelectedToppings] = useState<typeof TOPPINGS>([]);
+
+    // Default to first size if available, or a fallback
+    const [selectedSize, setSelectedSize] = useState<any>(null);
+    const [selectedToppings, setSelectedToppings] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (availableSizes.length > 0 && !selectedSize) {
+            setSelectedSize(availableSizes[0]);
+        }
+    }, [availableSizes]);
 
     if (!pizza) return null;
 
     const basePrice = parseFloat(pizza.price.replace('$', ''));
-    const totalPrice = basePrice + selectedSize.priceMod + selectedToppings.reduce((acc, t) => acc + t.price, 0);
+    const sizePriceMod = selectedSize ? parseFloat(selectedSize.price_modifier) : 0;
+    const toppingsPrice = selectedToppings.reduce((acc, t) => acc + parseFloat(t.price), 0);
+    const totalPrice = basePrice + sizePriceMod + toppingsPrice;
 
-    const toggleTopping = (topping: typeof TOPPINGS[0]) => {
+    const toggleTopping = (topping: any) => {
         setSelectedToppings(prev =>
-            prev.find(t => t.value === topping.value)
-                ? prev.filter(t => t.value !== topping.value)
+            prev.find(t => t.id === topping.id)
+                ? prev.filter(t => t.id !== topping.id)
                 : [...prev, topping]
         );
     };
@@ -63,8 +66,8 @@ export function PizzaCustomizer({ pizza, isOpen, onClose }: PizzaCustomizerProps
             name: pizza.title,
             price: totalPrice.toFixed(2),
             image_path: pizza.image,
-            size: selectedSize.label,
-            toppings: selectedToppings.map(t => t.label),
+            size: selectedSize?.name || 'Standard',
+            toppings: selectedToppings.map(t => t.name),
         });
         onClose();
     };
@@ -87,27 +90,29 @@ export function PizzaCustomizer({ pizza, isOpen, onClose }: PizzaCustomizerProps
                     <div className="space-y-4">
                         <h4 className="text-xs font-black uppercase tracking-widest text-[#EE1922]">CHOOSE YOUR SIZE</h4>
                         <div className="grid grid-cols-3 gap-3">
-                            {SIZES.map((size) => (
+                            {availableSizes.length > 0 ? availableSizes.map((size) => (
                                 <button
-                                    key={size.value}
+                                    key={size.id}
                                     onClick={() => setSelectedSize(size)}
                                     className={cn(
                                         "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all",
-                                        selectedSize.value === size.value
+                                        selectedSize?.id === size.id
                                             ? "border-[#EE1922] bg-[#EE1922]/5 shadow-inner"
                                             : "border-muted hover:border-[#EE1922]/20"
                                     )}
                                 >
                                     <Pizza className={cn(
                                         "mb-2 transition-transform",
-                                        size.value === 'personal' ? 'h-6 w-6' : size.value === 'medium' ? 'h-8 w-8' : 'h-10 w-10',
-                                        selectedSize.value === size.value ? "text-[#EE1922] scale-110" : "text-muted-foreground"
+                                        size.name.toLowerCase().includes('personal') ? 'h-6 w-6' : size.name.toLowerCase().includes('medium') ? 'h-8 w-8' : 'h-10 w-10',
+                                        selectedSize?.id === size.id ? "text-[#EE1922] scale-110" : "text-muted-foreground"
                                     )} />
-                                    <span className={cn("text-xs font-bold uppercase", selectedSize.value === size.value ? "text-[#EE1922]" : "text-muted-foreground")}>
-                                        {size.label}
+                                    <span className={cn("text-[10px] font-black uppercase italic", selectedSize?.id === size.id ? "text-[#EE1922]" : "text-muted-foreground")}>
+                                        {size.name}
                                     </span>
                                 </button>
-                            ))}
+                            )) : (
+                                <p className="col-span-3 text-center text-[10px] font-bold uppercase text-muted-foreground italic">Standard size only available.</p>
+                            )}
                         </div>
                     </div>
 
@@ -115,11 +120,11 @@ export function PizzaCustomizer({ pizza, isOpen, onClose }: PizzaCustomizerProps
                     <div className="space-y-4">
                         <h4 className="text-xs font-black uppercase tracking-widest text-[#EE1922]">ADD EXTRA FIRE (TOPPINGS)</h4>
                         <div className="grid grid-cols-2 gap-2">
-                            {TOPPINGS.map((topping) => {
-                                const isSelected = !!selectedToppings.find(t => t.value === topping.value);
+                            {availableToppings.length > 0 ? availableToppings.map((topping) => {
+                                const isSelected = !!selectedToppings.find(t => t.id === topping.id);
                                 return (
                                     <button
-                                        key={topping.value}
+                                        key={topping.id}
                                         onClick={() => toggleTopping(topping)}
                                         className={cn(
                                             "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
@@ -128,8 +133,8 @@ export function PizzaCustomizer({ pizza, isOpen, onClose }: PizzaCustomizerProps
                                                 : "border-muted hover:border-[#F8B803]/20"
                                         )}
                                     >
-                                        <span className={cn("text-xs font-bold uppercase", isSelected ? "text-black" : "text-muted-foreground")}>
-                                            {topping.label}
+                                        <span className={cn("text-[10px] font-black uppercase italic", isSelected ? "text-black" : "text-muted-foreground")}>
+                                            {topping.name}
                                         </span>
                                         <div className={cn(
                                             "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all",
@@ -139,7 +144,9 @@ export function PizzaCustomizer({ pizza, isOpen, onClose }: PizzaCustomizerProps
                                         </div>
                                     </button>
                                 );
-                            })}
+                            }) : (
+                                <p className="col-span-2 text-center text-[10px] font-bold uppercase text-muted-foreground italic">No extra toppings available.</p>
+                            )}
                         </div>
                     </div>
                 </div>
