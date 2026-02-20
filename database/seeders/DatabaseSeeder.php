@@ -54,10 +54,38 @@ class DatabaseSeeder extends Seeder
 
         // Seed Products
         $products = [
-            ['name' => 'Pepperoni Feast', 'price' => 18.99, 'description' => 'Classic pepperoni with extra mozzarella cheese.', 'category' => 'Pizza', 'is_available' => true],
-            ['name' => 'Veggie Lover', 'price' => 16.50, 'description' => 'Fresh mushrooms, green peppers, onions, tomatoes, and black olives.', 'category' => 'Pizza', 'is_available' => true],
-            ['name' => 'Meat Lover', 'price' => 21.00, 'description' => 'Pepperoni, Italian sausage, ham, bacon, and seasoned pork.', 'category' => 'Pizza', 'is_available' => true],
-            ['name' => 'Hawaiian', 'price' => 17.50, 'description' => 'Sweet pineapple and savory ham with premium cheese.', 'category' => 'Pizza', 'is_available' => true],
+            [
+                'name' => 'Pepperoni Feast', 
+                'price' => 18.99, 
+                'description' => 'Classic pepperoni with extra mozzarella cheese.', 
+                'ingredients' => 'Tomato Sauce, Mozzarella, Double Pepperoni, Italian Herbs',
+                'category' => 'Pizza', 
+                'is_available' => true
+            ],
+            [
+                'name' => 'Veggie Lover', 
+                'price' => 16.50, 
+                'description' => 'Fresh mushrooms, green peppers, onions, tomatoes, and black olives.', 
+                'ingredients' => 'Tomato Sauce, Mozzarella, Mushrooms, Green Peppers, Red Onions, Fresh Tomatoes, Black Olives',
+                'category' => 'Pizza', 
+                'is_available' => true
+            ],
+            [
+                'name' => 'Meat Lover', 
+                'price' => 21.00, 
+                'description' => 'Pepperoni, Italian sausage, ham, bacon, and seasoned pork.', 
+                'ingredients' => 'Tomato Sauce, Mozzarella, Pepperoni, Italian Sausage, Sliced Ham, Crispy Bacon, Seasoned Pork',
+                'category' => 'Pizza', 
+                'is_available' => true
+            ],
+            [
+                'name' => 'Hawaiian', 
+                'price' => 17.50, 
+                'description' => 'Sweet pineapple and savory ham with premium cheese.', 
+                'ingredients' => 'Tomato Sauce, Mozzarella, Sliced Ham, Sweet Pineapple Chunks',
+                'category' => 'Pizza', 
+                'is_available' => true
+            ],
         ];
 
         foreach ($products as $p) {
