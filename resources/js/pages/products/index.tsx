@@ -153,8 +153,16 @@ export default function Index({ products = [] }: Props) {
                         filteredProducts.map((product: Product) => (
                             <Card key={product.id} className="overflow-hidden border-none shadow-xl group hover:shadow-2xl transition-all duration-300 dark:bg-[#161615]">
                                 <div className="aspect-video bg-muted/20 flex items-center justify-center relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-0" />
-                                    <Pizza className="size-16 text-[#EE1922]/10 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500 z-10" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
+                                    {product.image_path ? (
+                                        <img
+                                            src={product.image_path}
+                                            alt={product.name}
+                                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                    ) : (
+                                        <Pizza className="size-16 text-[#EE1922]/20 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500" />
+                                    )}
                                     <Badge className={cn(
                                         "absolute top-3 left-3 font-black uppercase text-[9px] tracking-widest px-2 py-0.5 z-20",
                                         product.is_available ? "bg-[#22c55e] text-white" : "bg-[#EE1922] text-white"
