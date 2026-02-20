@@ -120,4 +120,60 @@ class OrderController extends Controller
             return redirect()->route('orders.index');
         });
     }
+    public function checkout(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+            'city' => 'required|string|max:100',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        return \DB::transaction(function () use ($validated) {
+            // Find or create customer based on email
+            $customer = Customer::updateOrCreate(
+                ['email' => $validated['email']],
+                [
+                    'name' => $validated['name'],
+                    'phone' => $validated['phone'],
+                    'address' => $validated['address'],
+                    'city' => $validated['city'],
+                    'user_id' => auth()->id(),
+                ]
+            );
+
+            $totalAmount = 0;
+            $orderItems = [];
+
+            foreach ($validated['items'] as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $subtotal = $product->price * $item['quantity'];
+                $totalAmount += $subtotal;
+
+                $orderItems[] = [
+                    'product_id' => $product->id,
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $product->price,
+                    'subtotal' => $subtotal,
+                ];
+            }
+
+            $order = Order::create([
+                'customer_id' => $customer->id,
+                'status' => 'Pending',
+                'type' => 'Delivery',
+                'total_amount' => $totalAmount,
+            ]);
+
+            foreach ($orderItems as $itemData) {
+                $order->orderItems()->create($itemData);
+            }
+
+            return redirect()->route('home')->with('success', 'Order placed successfully!');
+        });
+    }
 }

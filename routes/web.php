@@ -7,6 +7,11 @@ use Laravel\Fortify\Features;
 Route::get('/', function () {
     return Inertia::render('welcome', [
         'canRegister' => Features::enabled(Features::registration()),
+        'products' => \App\Models\Product::where('is_available', true)
+            ->where('category', 'Pizza')
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get(),
     ]);
 })->name('home');
 
@@ -34,5 +39,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('orders/{order}/edit', [App\Http\Controllers\OrderController::class, 'edit'])->name('orders.edit');
     Route::post('orders', [App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
     Route::patch('orders/{order}', [App\Http\Controllers\OrderController::class, 'update'])->name('orders.update');
+
+    Route::get('checkout', function () {
+        return Inertia::render('checkout');
+    })->name('checkout');
+    Route::post('checkout', [App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout.store');
 });
 require __DIR__.'/settings.php';

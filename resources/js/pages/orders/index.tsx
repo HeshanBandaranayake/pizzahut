@@ -4,6 +4,7 @@ import type { BreadcrumbItem } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ListOrdered, Plus, Search, Filter, MoreHorizontal, Edit, CheckCircle, Truck, XCircle, Utensils, ShoppingBag } from 'lucide-react';
 import {
     DropdownMenu,
@@ -14,6 +15,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { cn } from "@/lib/utils";
+import { useState } from 'react';
 
 interface Order {
     id: number;
@@ -46,6 +48,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({ orders = [] }: Props) {
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredOrders = orders.filter((order: Order) => {
+        const searchLower = searchQuery.toLowerCase();
+        const orderId = `#ph-${order.id.toString().padStart(4, '0')}`;
+
+        return (
+            orderId.includes(searchLower) ||
+            (order.customer?.name || 'Guest').toLowerCase().includes(searchLower) ||
+            order.type.toLowerCase().includes(searchLower) ||
+            order.status.toLowerCase().includes(searchLower)
+        );
+    });
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Order Logistics" />
@@ -62,13 +78,25 @@ export default function Index({ orders = [] }: Props) {
                     </Button>
                 </div>
 
-                <div className="flex gap-2 mb-2">
-                    <Button variant="outline" size="sm" className="font-bold text-xs uppercase italic border-muted-foreground/20">
-                        <Filter className="mr-2 size-3" /> All Status
-                    </Button>
-                    <Button variant="outline" size="sm" className="font-bold text-xs uppercase italic border-muted-foreground/20">
-                        Today's Orders
-                    </Button>
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                    <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="font-bold text-xs uppercase italic border-muted-foreground/20">
+                            <Filter className="mr-2 size-3" /> All Status
+                        </Button>
+                        <Button variant="outline" size="sm" className="font-bold text-xs uppercase italic border-muted-foreground/20">
+                            Today's Orders
+                        </Button>
+                    </div>
+
+                    <div className="relative w-full sm:w-64 ml-auto">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        <Input
+                            placeholder="SEARCH ORDERS..."
+                            className="pl-9 font-bold italic uppercase tracking-tighter text-xs h-9 border-muted-foreground/20 bg-muted/20 focus:bg-background transition-all"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <Card className="border-sidebar-border/70 shadow-sm overflow-hidden">
@@ -88,10 +116,10 @@ export default function Index({ orders = [] }: Props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {orders.length > 0 ? (
-                                        orders.map((order) => {
+                                    {filteredOrders.length > 0 ? (
+                                        filteredOrders.map((order: Order) => {
                                             const itemSummary = order.order_items
-                                                ?.map(item => `${item.quantity}x ${item.product?.name}`)
+                                                ?.map((item: any) => `${item.quantity}x ${item.product?.name}`)
                                                 .join(', ') || 'Standard Prep';
 
                                             return (
@@ -201,10 +229,10 @@ export default function Index({ orders = [] }: Props) {
                                         })
                                     ) : (
                                         <tr>
-                                            <td colSpan={6} className="py-20 text-center">
+                                            <td colSpan={8} className="py-20 text-center">
                                                 <ListOrdered className="mx-auto size-12 text-muted-foreground/30 mb-4" />
-                                                <h3 className="text-lg font-bold italic">No Orders Yet</h3>
-                                                <p className="text-muted-foreground text-sm font-medium italic">Your kitchen is quiet. Start taking orders to see them here.</p>
+                                                <h3 className="text-lg font-bold italic">No Orders Match Search</h3>
+                                                <p className="text-muted-foreground text-sm font-medium italic">Try adjusting your terms or browse the full database.</p>
                                             </td>
                                         </tr>
                                     )}

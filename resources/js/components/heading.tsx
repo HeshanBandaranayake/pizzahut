@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+
 export default function Heading({
     title,
     description,
@@ -10,16 +12,15 @@ export default function Heading({
     return (
         <header className={variant === 'small' ? '' : 'mb-8 space-y-0.5'}>
             <h2
-                className={
-                    variant === 'small'
-                        ? 'mb-0.5 text-base font-medium'
-                        : 'text-xl font-semibold tracking-tight'
-                }
+                className={cn(
+                    "text-[#EE1922] font-black italic tracking-tight",
+                    variant === 'small' ? 'text-base' : 'text-2xl'
+                )}
             >
                 {title}
             </h2>
             {description && (
-                <p className="text-sm text-muted-foreground">{description}</p>
+                <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">{description}</p>
             )}
         </header>
     );
