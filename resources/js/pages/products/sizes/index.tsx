@@ -120,7 +120,7 @@ export default function Index({ sizes = [] }: Props) {
                                         {errors.name && <p className="text-red-500 text-[10px] uppercase font-bold italic">{errors.name}</p>}
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="price_modifier" className="font-black italic uppercase text-[10px]">Price Modifier ($)</Label>
+                                        <Label htmlFor="price_modifier" className="font-black italic uppercase text-[10px]">Price Modifier (Rs.)</Label>
                                         <Input
                                             id="price_modifier"
                                             type="number"
@@ -183,7 +183,7 @@ export default function Index({ sizes = [] }: Props) {
                                 <CardContent className="p-4 pt-0">
                                     <div className="flex items-baseline gap-1 mb-4">
                                         <span className="text-2xl font-black text-[#EE1922] italic tracking-tighter">
-                                            {parseFloat(size.price_modifier) >= 0 ? '+' : ''}${parseFloat(size.price_modifier).toFixed(2)}
+                                            {parseFloat(size.price_modifier) >= 0 ? '+' : ''}Rs. {Math.abs(parseFloat(size.price_modifier)).toFixed(2)}
                                         </span>
                                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">MODIFIER</span>
                                     </div>

@@ -120,7 +120,7 @@ export default function Index({ toppings = [] }: Props) {
                                         {errors.name && <p className="text-red-500 text-[10px] uppercase font-bold italic">{errors.name}</p>}
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="price" className="font-black italic uppercase text-[10px]">Unit Price ($)</Label>
+                                        <Label htmlFor="price" className="font-black italic uppercase text-[10px]">Unit Price (Rs.)</Label>
                                         <Input
                                             id="price"
                                             type="number"
@@ -186,7 +186,7 @@ export default function Index({ toppings = [] }: Props) {
                                 <CardContent className="p-4 pt-0">
                                     <div className="flex items-baseline gap-1 mb-4">
                                         <span className="text-2xl font-black text-[#F8B803] italic tracking-tighter">
-                                            ${parseFloat(topping.price).toFixed(2)}
+                                            Rs. {parseFloat(topping.price).toFixed(2)}
                                         </span>
                                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">PER UNIT</span>
                                     </div>

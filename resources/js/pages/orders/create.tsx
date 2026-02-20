@@ -228,7 +228,7 @@ export default function Create({ products = [], customers = [] }: Props) {
                                                 <SelectContent>
                                                     {products.map((product) => (
                                                         <SelectItem key={product.id} value={product.id.toString()} className="font-bold">
-                                                            {product.name} - ${product.price}
+                                                            {product.name} - Rs. {product.price}
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>
@@ -263,7 +263,7 @@ export default function Create({ products = [], customers = [] }: Props) {
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-4">
                             <div className="grid gap-0.5">
                                 <span className="text-[10px] font-black italic uppercase tracking-widest text-muted-foreground">Estimate Total</span>
-                                <span className="text-4xl font-black text-[#EE1922] italic tracking-tighter">${calculateTotal()}</span>
+                                <span className="text-4xl font-black text-[#EE1922] italic tracking-tighter">Rs. {calculateTotal()}</span>
                             </div>
                             <Button
                                 disabled={processing}
@@ -326,7 +326,7 @@ export default function Create({ products = [], customers = [] }: Props) {
 
                                         <div className="pt-4 border-t border-sidebar-border/50 flex items-center justify-between">
                                             <span className="text-[10px] font-black italic uppercase tracking-widest text-muted-foreground">Unit Price</span>
-                                            <span className="text-2xl font-black text-[#EE1922] italic tracking-tighter">${focusedProduct.price}</span>
+                                            <span className="text-2xl font-black text-[#EE1922] italic tracking-tighter">Rs. {focusedProduct.price}</span>
                                         </div>
                                     </div>
                                 ) : (

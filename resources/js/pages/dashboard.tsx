@@ -49,7 +49,7 @@ export default function Dashboard({ stats, staffRoles = {}, recentOrders = [] }:
     const metrics = [
         {
             title: 'Gross Revenue',
-            value: `$${(stats?.totalRevenue ?? 0).toLocaleString()}`,
+            value: `Rs. ${(stats?.totalRevenue ?? 0).toLocaleString()}`,
             icon: DollarSign,
             trend: '+8.4%',
             color: 'text-[#22c55e]',
@@ -245,7 +245,7 @@ export default function Dashboard({ stats, staffRoles = {}, recentOrders = [] }:
                                                                 {order.status}
                                                             </Badge>
                                                         </td>
-                                                        <td className="px-6 py-4 text-right font-black text-[#EE1922] tracking-tighter">${parseFloat(order.total_amount).toFixed(2)}</td>
+                                                        <td className="px-6 py-4 text-right font-black text-[#EE1922] tracking-tighter">Rs. {parseFloat(order.total_amount).toFixed(2)}</td>
                                                     </tr>
                                                 );
                                             })}

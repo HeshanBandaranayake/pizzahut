@@ -7,7 +7,7 @@ export interface CartItem {
     price: string;
     quantity: number;
     image_path?: string | null;
-    size: string;
+    size?: string | null;
     toppings: string[];
     cartKey: string; // Unique key: id-size-toppings
 }
@@ -20,8 +20,8 @@ interface CartStore {
     clearCart: () => void;
 }
 
-const generateCartKey = (id: number, size: string, toppings: string[]) => {
-    return `${id}-${size}-${[...toppings].sort().join(',')}`;
+const generateCartKey = (id: number, size?: string | null, toppings: string[] = []) => {
+    return `${id}-${size ?? 'standard'}-${[...toppings].sort().join(',')}`;
 };
 
 const useCartStore = create<CartStore>()(

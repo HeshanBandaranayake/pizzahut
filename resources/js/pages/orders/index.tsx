@@ -192,7 +192,7 @@ export default function Index({ orders = [] }: Props) {
                                                         {new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                     </td>
                                                     <td className="px-6 py-4 text-right font-black text-[#EE1922] whitespace-nowrap">
-                                                        ${order.total_amount}
+                                                        Rs. {order.total_amount}
                                                     </td>
                                                     <td className="px-6 py-4 text-right">
                                                         <DropdownMenu>

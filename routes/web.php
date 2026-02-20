@@ -10,7 +10,18 @@ Route::get('/', function () {
         'products' => \App\Models\Product::where('is_available', true)
             ->where('category', 'Pizza')
             ->orderBy('created_at', 'desc')
-            ->take(6)
+            ->get(),
+        'signaturePizzas' => \App\Models\Product::where('is_available', true)
+            ->where('category', 'Signature')
+            ->orderBy('created_at', 'desc')
+            ->get(),
+        'delightPizzas' => \App\Models\Product::where('is_available', true)
+            ->where('category', 'Delight')
+            ->orderBy('created_at', 'desc')
+            ->get(),
+        'beverages' => \App\Models\Product::where('is_available', true)
+            ->where('category', 'Beverages')
+            ->orderBy('created_at', 'desc')
             ->get(),
         'pizzaSizes' => \App\Models\PizzaSize::where('is_available', true)->get(),
         'toppings' => \App\Models\Topping::where('is_available', true)->get(),

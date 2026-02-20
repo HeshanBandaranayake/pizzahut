@@ -242,7 +242,7 @@ export default function Edit({ order, products = [], customers = [] }: Props) {
                                             <SelectContent>
                                                 {products.map((product) => (
                                                     <SelectItem key={product.id} value={product.id.toString()} className="font-bold">
-                                                        {product.name} - ${product.price}
+                                                        {product.name} - Rs. {product.price}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -277,7 +277,7 @@ export default function Edit({ order, products = [], customers = [] }: Props) {
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-4">
                         <div className="grid gap-0.5">
                             <span className="text-[10px] font-black italic uppercase tracking-widest text-muted-foreground">New Total</span>
-                            <span className="text-4xl font-black text-[#EE1922] italic tracking-tighter">${calculateTotal()}</span>
+                            <span className="text-4xl font-black text-[#EE1922] italic tracking-tighter">Rs. {calculateTotal()}</span>
                         </div>
                         <Button
                             disabled={processing}

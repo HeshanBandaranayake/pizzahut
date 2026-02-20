@@ -66,7 +66,7 @@ export default function Create() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="price" className="font-bold uppercase text-[10px] tracking-widest">Price ($)</Label>
+                                    <Label htmlFor="price" className="font-bold uppercase text-[10px] tracking-widest">Price (Rs.)</Label>
                                     <Input
                                         id="price"
                                         type="number"
@@ -85,10 +85,10 @@ export default function Create() {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Pizza" className="font-bold">Pizza</SelectItem>
-                                            <SelectItem value="Sides" className="font-bold">Sides</SelectItem>
-                                            <SelectItem value="Drinks" className="font-bold">Drinks</SelectItem>
-                                            <SelectItem value="Desserts" className="font-bold">Desserts</SelectItem>
+                                            <SelectItem value="Pizza" className="font-bold">🍕 Classic Pizza</SelectItem>
+                                            <SelectItem value="Signature" className="font-bold">⭐ Signature Pizza</SelectItem>
+                                            <SelectItem value="Delight" className="font-bold">✨ Delight Pizza</SelectItem>
+                                            <SelectItem value="Beverages" className="font-bold">🥤 Beverages</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

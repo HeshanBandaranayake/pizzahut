@@ -13,7 +13,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Pizza, Plus, MoreVertical, Edit, Trash2, Search, Tag, Flame } from 'lucide-react';
+import { Pizza, Plus, MoreVertical, Edit, Trash2, Search, Tag, Flame, X } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useState } from 'react';
 
@@ -37,17 +37,37 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+type CategoryFilter = 'All' | 'Pizza' | 'Signature' | 'Delight' | 'Beverages';
+
+const CATEGORY_FILTERS: { key: CategoryFilter; label: string; emoji: string }[] = [
+    { key: 'All', label: 'All', emoji: '🍽️' },
+    { key: 'Pizza', label: 'Classic', emoji: '🍕' },
+    { key: 'Signature', label: 'Signature', emoji: '⭐' },
+    { key: 'Delight', label: 'Delight', emoji: '✨' },
+    { key: 'Beverages', label: 'Beverages', emoji: '🥤' },
+];
+
 export default function Index({ products = [] }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('All');
+    const [availabilityFilter, setAvailabilityFilter] = useState<'all' | 'available' | 'unavailable'>('all');
 
     const filteredProducts = products.filter((product: Product) => {
         const searchLower = searchQuery.toLowerCase();
-        return (
+        const matchesSearch =
             product.name.toLowerCase().includes(searchLower) ||
             product.category.toLowerCase().includes(searchLower) ||
-            (product.description || '').toLowerCase().includes(searchLower)
-        );
+            (product.description || '').toLowerCase().includes(searchLower);
+        const matchesCategory = categoryFilter === 'All' || product.category === categoryFilter;
+        const matchesAvailability =
+            availabilityFilter === 'all' ||
+            (availabilityFilter === 'available' && product.is_available) ||
+            (availabilityFilter === 'unavailable' && !product.is_available);
+        return matchesSearch && matchesCategory && matchesAvailability;
     });
+
+    const hasFilters = categoryFilter !== 'All' || availabilityFilter !== 'all' || searchQuery !== '';
+    const clearFilters = () => { setCategoryFilter('All'); setAvailabilityFilter('all'); setSearchQuery(''); };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -65,7 +85,8 @@ export default function Index({ products = [] }: Props) {
                     </Button>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                {/* Search & Availability row */}
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                     <div className="relative w-full sm:w-80">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
@@ -75,6 +96,56 @@ export default function Index({ products = [] }: Props) {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
+
+                    {/* Availability toggle */}
+                    <div className="flex h-10 rounded-md border border-muted-foreground/20 overflow-hidden flex-shrink-0">
+                        {(['all', 'available', 'unavailable'] as const).map((val) => (
+                            <button
+                                key={val}
+                                onClick={() => setAvailabilityFilter(val)}
+                                className={cn(
+                                    "px-3 text-[10px] font-black uppercase italic tracking-widest transition-all",
+                                    availabilityFilter === val
+                                        ? val === 'available' ? "bg-green-600 text-white"
+                                            : val === 'unavailable' ? "bg-[#EE1922] text-white"
+                                                : "bg-[#EE1922] text-white"
+                                        : "text-muted-foreground hover:bg-muted"
+                                )}
+                            >
+                                {val === 'all' ? 'All' : val === 'available' ? '✅ In Stock' : '❌ Out'}
+                            </button>
+                        ))}
+                    </div>
+
+                    {hasFilters && (
+                        <button
+                            onClick={clearFilters}
+                            className="flex items-center gap-1.5 text-[10px] font-black uppercase italic tracking-widest text-muted-foreground hover:text-[#EE1922] transition-colors flex-shrink-0"
+                        >
+                            <X className="size-3" /> Clear
+                        </button>
+                    )}
+                </div>
+
+                {/* Category Filter Pills */}
+                <div className="flex flex-wrap gap-2">
+                    {CATEGORY_FILTERS.map((cat) => (
+                        <button
+                            key={cat.key}
+                            onClick={() => setCategoryFilter(cat.key)}
+                            className={cn(
+                                "px-4 py-2 rounded-xl text-xs font-black italic uppercase tracking-widest border transition-all",
+                                categoryFilter === cat.key
+                                    ? "bg-[#EE1922] text-white border-[#EE1922] shadow-lg shadow-red-100 dark:shadow-red-900/30 scale-105"
+                                    : "border-muted-foreground/20 text-muted-foreground hover:border-[#EE1922]/40 hover:text-[#EE1922] hover:bg-[#EE1922]/5"
+                            )}
+                        >
+                            <span className="mr-1">{cat.emoji}</span> {cat.label}
+                            <span className="ml-1.5 text-[9px] opacity-60">
+                                ({products.filter(p => cat.key === 'All' ? true : p.category === cat.key).length})
+                            </span>
+                        </button>
+                    ))}
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -99,7 +170,7 @@ export default function Index({ products = [] }: Props) {
                                         <CardTitle className="text-lg font-black italic tracking-widest uppercase leading-tight group-hover:text-[#EE1922] transition-colors">{product.name}</CardTitle>
                                     </div>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <span className="text-xl font-black text-[#EE1922] tracking-tighter italic">${parseFloat(product.price).toFixed(2)}</span>
+                                        <span className="text-xl font-black text-[#EE1922] tracking-tighter italic">Rs. {parseFloat(product.price).toFixed(2)}</span>
                                         <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">MSRP INCL. TAX</span>
                                     </div>
                                     <CardDescription className="line-clamp-2 text-[11px] font-medium leading-relaxed uppercase tracking-tight h-8 mb-2">

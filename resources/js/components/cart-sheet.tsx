@@ -100,7 +100,7 @@ export function CartSheet() {
                                                         <Plus className="h-3 w-3" />
                                                     </Button>
                                                 </div>
-                                                <span className="font-black text-[#EE1922] italic">${(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+                                                <span className="font-black text-[#EE1922] italic">Rs. {(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@ export function CartSheet() {
                         <div className="space-y-1.5">
                             <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
                                 <span>Subtotal</span>
-                                <span>${total.toFixed(2)}</span>
+                                <span>Rs. {total.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-[#EE1922]">
                                 <span>Est. Delivery</span>
@@ -135,7 +135,7 @@ export function CartSheet() {
                             <Separator className="my-2" />
                             <div className="flex justify-between items-center text-lg font-black italic text-[#EE1922]">
                                 <span>TOTAL DOX</span>
-                                <span className="text-3xl tracking-tighter">${total.toFixed(2)}</span>
+                                <span className="text-3xl tracking-tighter">Rs. {total.toFixed(2)}</span>
                             </div>
                         </div>
                         <SheetFooter className="sm:flex-col gap-3">
