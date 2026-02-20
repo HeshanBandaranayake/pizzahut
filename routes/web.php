@@ -23,8 +23,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('customers', App\Http\Controllers\CustomerController::class);
     });
 
-    // Admin can manage staff
-    Route::middleware(['role:Admin'])->group(function () {
+    // Admin and Manager can manage staff
+    Route::middleware(['role:Admin,Manager'])->group(function () {
         Route::resource('staff', App\Http\Controllers\StaffController::class);
     });
     

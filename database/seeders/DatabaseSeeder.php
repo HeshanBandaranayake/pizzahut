@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@pizzahut.com'],
             [
                 'name' => 'PizzaHut Admin',
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'manager@pizzahut.com'],
             [
                 'name' => 'Sarah Manager',
@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'chef@pizzahut.com'],
             [
                 'name' => 'Chef Mario',
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'reception@pizzahut.com'],
             [
                 'name' => 'Front Desk Linda',
