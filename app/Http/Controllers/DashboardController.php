@@ -10,8 +10,12 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function index(): Response
+    public function index(): Response|\Illuminate\Http\RedirectResponse
     {
+        if (auth()->user()->role === 'Customer') {
+            return redirect('/');
+        }
+
         $stats = [
             'totalRevenue' => Order::where('status', 'Completed')->sum('total_amount'),
             'activeOrders' => Order::whereIn('status', ['Pending', 'Delivering'])->count(),

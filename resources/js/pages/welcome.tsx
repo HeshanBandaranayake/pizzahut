@@ -28,6 +28,7 @@ export default function Welcome({
 
     // Featured pizzas calculated from database products or fallback to hero items
     const featuredPizzas = products.length > 0 ? products.map(p => ({
+        id: p.id,
         title: p.name,
         description: p.description || "Freshly made with premium ingredients.",
         price: `$${p.price}`,
@@ -35,14 +36,28 @@ export default function Welcome({
         badge: p.id % 2 === 0 ? "Bestseller" : "Chef's Choice"
     })) : [
         {
+            id: 1,
             title: "Cheesy Pepperoni",
             description: "A fan favorite with double pepperoni and extra mozzarella.",
             price: "$14.99",
             image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=2080&auto=format&fit=crop",
             badge: "Bestseller"
         },
-        // ... other defaults can stay if needed, but we'll prioritize DB
     ];
+
+    const handleAddToCart = (pizza: any) => {
+        if (!auth.user) {
+            window.location.href = login().url;
+            return;
+        }
+
+        addItem({
+            id: pizza.id,
+            name: pizza.title,
+            price: pizza.price.replace('$', ''),
+            image_path: pizza.image
+        });
+    };
 
     return (
         <div className="min-h-screen bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC]">
@@ -66,9 +81,15 @@ export default function Welcome({
                     <div className="flex gap-4 items-center">
                         <CartSheet />
                         {auth.user ? (
-                            <Link href={dashboard()}>
-                                <Button variant="outline">Dashboard</Button>
-                            </Link>
+                            auth.user.role === 'Customer' ? (
+                                <Link href="/">
+                                    <Button variant="outline">Home</Button>
+                                </Link>
+                            ) : (
+                                <Link href={dashboard()}>
+                                    <Button variant="outline">Dashboard</Button>
+                                </Link>
+                            )
                         ) : (
                             <>
                                 <Link href={login()}>
@@ -143,12 +164,7 @@ export default function Welcome({
                             <CardFooter>
                                 <Button
                                     className="w-full bg-[#EE1922] hover:bg-[#D0161D]"
-                                    onClick={() => addItem({
-                                        id: products.find(p => p.name === pizza.title)?.id || 0,
-                                        name: pizza.title,
-                                        price: pizza.price.replace('$', ''),
-                                        image_path: pizza.image
-                                    })}
+                                    onClick={() => handleAddToCart(pizza)}
                                 >
                                     Add to Cart
                                 </Button>

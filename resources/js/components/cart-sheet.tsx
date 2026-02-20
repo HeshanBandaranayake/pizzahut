@@ -33,7 +33,7 @@ export function CartSheet() {
                 <SheetHeader className="pb-6">
                     <SheetTitle className="flex items-center gap-2 text-2xl font-black italic text-[#EE1922]">
                         <ShoppingBag className="h-6 w-6" />
-                        YOUR ORDER
+                        DELIVERY ORDER
                     </SheetTitle>
                     <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Kitchen Intake Pending</p>
                 </SheetHeader>
